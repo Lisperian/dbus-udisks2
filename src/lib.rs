@@ -28,6 +28,8 @@ const DEST: &str = "org.freedesktop.UDisks2";
 const PATH: &str = "/org/freedesktop/UDisks2";
 const NO_WAKEUP: &str = "nowakeup";
 
+const DEST_BLOCK: &str = "org.freedesktop.UDisks2.Block";
+
 #[derive(Default)]
 struct DiskCache(HashMap<dbus::Path<'static>, DbusObjects>);
 
@@ -172,5 +174,10 @@ impl UDisks2 {
                 .unwrap_or(SmartStatus::Unknown),
             attributes: attrs.into_iter().map(Into::into).collect(),
         }))
+    }
+
+    pub fn open_block_device(&self, block: &Block) -> Result<std::fs::File, dbus::Error> {
+        self.proxy(&block.path).method_call(DEST_BLOCK, "OpenDevice", ("r", HashMap::<&str, Variant<&str>>::new()))
+            .map(|(result,)| result)
     }
 }
