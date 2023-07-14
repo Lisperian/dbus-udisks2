@@ -176,8 +176,8 @@ impl UDisks2 {
         }))
     }
 
-    pub fn open_block_device(&self, block: &Block) -> Result<std::fs::File, dbus::Error> {
-        self.proxy(&block.path).method_call(DEST_BLOCK, "OpenDevice", ("r", HashMap::<&str, Variant<&str>>::new()))
+    pub fn open_block_device(&self, block: &Block, mode: &str) -> Result<std::fs::File, dbus::Error> {
+        self.proxy(&block.path).method_call(DEST_BLOCK, "OpenDevice", (mode, HashMap::<&str, Variant<&str>>::new()))
             .map(|(result,)| result)
     }
 }
