@@ -10,6 +10,7 @@ pub struct Block {
     pub device: PathBuf,
     pub drive: String,
     pub encrypted: Option<Encrypted>,
+    pub filesystem_size: Option<u64>,
     pub hint_auto: bool,
     pub hint_icon_name: Option<String>,
     pub hint_ignore: bool,
@@ -281,7 +282,12 @@ impl ParseFrom for Block {
                         .get("MountPoints")
                         .and_then(get_array_of_byte_arrays)
                         .map(|paths| paths.into_iter().map(PathBuf::from).collect::<Vec<_>>())
-                        .unwrap_or_default()
+                        .unwrap_or_default();
+
+                    block.filesystem_size = object
+                        .get("Size")
+                        .map(|x| x.as_u64())
+                        .flatten()
                 }
                 "org.freedesktop.UDisks2.Encrypted" => {
                     let mut encrypted = Encrypted::default();
