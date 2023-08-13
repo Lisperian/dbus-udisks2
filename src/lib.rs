@@ -190,4 +190,10 @@ impl UDisks2 {
     pub fn unmount_file_system(&self, block: &Block) -> Result<(), dbus::Error> {
         self.proxy(&block.path).method_call(DEST_FILE_SYSTEM, "Unmount", (HashMap::<&str, Variant<&str>>::new(),))
     }
+
+    pub fn format_block(&self, block: &Block, fs_type: &str) -> Result<(), dbus::Error> {
+        let options = HashMap::<&str, Variant<&str>>::new();
+
+        self.proxy(&block.path).method_call(DEST_BLOCK, "Format", (fs_type, options))
+    }
 }
