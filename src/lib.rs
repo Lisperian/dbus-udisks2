@@ -196,4 +196,8 @@ impl UDisks2 {
 
         self.proxy(&block.path).method_call(DEST_BLOCK, "Format", (fs_type, options))
     }
+
+    pub fn rescan_block(&self, block: &Block) -> Result<(), dbus::Error> {
+        self.proxy(&block.path).method_call(DEST_BLOCK, "Rescan", (HashMap::<&str, Variant<&str>>::new(),))
+    }
 }
